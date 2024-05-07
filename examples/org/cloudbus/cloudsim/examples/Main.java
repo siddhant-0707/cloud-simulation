@@ -42,7 +42,7 @@ import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
  * An example showing how to create
  * scalable simulations.
  */
-public class CloudSimExample6 {
+public class Main {
 
 	/** The cloudlet list. */
 	public static List<cloudlet3> cloudletList;
@@ -92,8 +92,8 @@ public class CloudSimExample6 {
 		UtilizationModel utilizationModel = new UtilizationModelFull();
 
 		cloudlet3[] cloudlet = new cloudlet3[cloudlets];
-		double[][] executioncost= {{10.23,15.12,12.15},{13.17,14.17,11.28},{17.13,13.11,11.11},{12.26,16.12,14.14},{13.19,18.14,10.22}};
-		int[][] datasize= {{15,15},{5,1},{7,1},{3,1},{12,1}};
+		double[][] executioncost= {{10.23,15.12,12.15},{13.17,14.17,11.28},{17.13,13.11,11.11},{12.26,16.12,14.14},{13.19,18.14,10.22}, {13.19,18.14,10.22}};
+		int[][] datasize= {{15,15},{5,1},{7,1},{3,1},{12,1}, {12,1}};
 
 		for(int i=0;i<cloudlets;i++){
 			Random random = new Random();
@@ -113,7 +113,7 @@ public class CloudSimExample6 {
 	 * Creates main() to run this example
 	 */
 	public static void main(String[] args) {
-		Log.printLine("Starting CloudSimExample6...");
+		Log.printLine("Starting Main Program...");
 
 		try {
 			// First step: Initialize the CloudSim package. It should be called
@@ -147,28 +147,26 @@ public class CloudSimExample6 {
 			GeneticAlgorithm ga = new GeneticAlgorithm(15, 0.30, 0.95, 2, cloudletList, vmlist);
 
 			// Initialize population
-			System.out.println("Population GA Init");
-			Population population = ga.initPopulation(5);
+			System.out.println("Population Initialization");
+			int chromosomeLength = 5;
+			Population population = ga.initPopulation(chromosomeLength);
 
 			// Evaluate population
 			ga.evalPopulation(population);
 			
-			
-			int i=1;
-			while (i<= 15) {
+			int iteration = 1;
+			while (iteration <= 15) 
+			{	
 				// get fittest individual from population in every iteration
-				
 				Individual fit = population.getFittest(0);
-//				System.out.println("Individual => ");
-//				for(int j=0;j<5;j++) {
-//					System.out.print(fit.chromosome[j] + " ");
-//				}
+				
 				System.out.print("Fittest: ");
-				for(int j=0;j<5;j++) {
+				for(int j=0;j<chromosomeLength;j++) {
 					System.out.print(fit.chromosome[j] + " ");
 				}
 				System.out.println("  fitness => " + fit.getFitness());
-				for(int j=0;j<5;j++)
+				
+				for(int j=0;j<chromosomeLength;j++)
 				{
 					broker.bindCloudletToVm(j, fit.chromosome[j]);
 				}
@@ -184,7 +182,7 @@ public class CloudSimExample6 {
 				ga.evalPopulation(population);
 
 				// Increment the current generation
-				i++;
+				iteration++;
 				
 			}
 			System.out.println("Best solution of GA: " + population.getFittest(0).toString());
@@ -192,7 +190,7 @@ public class CloudSimExample6 {
 			int[][] particles = new int[population.size()][5];
 			for(int ind=0;ind<population.size();ind++)
 			{
-				for(int index=0;index<5;index++)
+				for(int index=0;index<chromosomeLength;index++)
 				{
 					particles[ind][index] = population.population[ind].chromosome[index];
 				}
@@ -221,7 +219,7 @@ public class CloudSimExample6 {
 
 			printCloudletList(newList);
 
-			Log.printLine("CloudSimExample6 finished!");
+			Log.printLine("GA-PSO finished!");
 			
 		}
 		catch (Exception e)

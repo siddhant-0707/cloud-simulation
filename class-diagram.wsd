@@ -1,0 +1,82 @@
+@startuml
+
+class Main {
+  -cloudletList : List<cloudlet3>
+  -vmlist : List<vm3>
+  +createVM(userId : int, vms : int) : List<vm3>
+  +createCloudlet(userId : int, cloudlets : int) : List<cloudlet3>
+  +main(args : String[]) : void
+}
+
+Main -->  Population : uses
+Main -->  Individual : " "
+Main -->  Particle : " "
+Main -->  Swarm : uses
+
+class Population {
+  -population : Individual[]
+  -populationFitness : double
+  +Population(populationSize : int)
+  +Population(populationSize : int, chromosomeLength : int)
+  +getIndividuals() : Individual[]
+  +getFittest(offset : int) : Individual
+  +setPopulationFitness(fitness : double) : void
+  +getPopulationFitness() : double
+  +size() : int
+  +setIndividual(offset : int, individual : Individual) : Individual
+  +getIndividual(offset : int) : Individual
+  +shuffle() : void
+}
+
+Population  *--  Individual : contains
+
+class Individual {
+  +chromosome : int[]
+  -fitness : double
+  +Individual(chromosome : int[])
+  +Individual(chromosomeLength : int)
+  +getChromosome() : int[]
+  +getChromosomeLength() : int
+  +setGene(offset : int, gene : int) : void
+  +getGene(offset : int) : int
+  +setFitness(fitness : double) : void
+  +getFitness() : double
+  +toString() : String
+}
+
+class Particle {
+  +position : Vector
+  +velocity : Vector
+  +bestPosition : Vector
+  -bestEval : double
+  +Particle(a : int, b : int, c : int, d : int, e : int)
+  -eval() : double
+  +updatePersonalBest() : void
+  +getPosition() : Vector
+  +getVelocity() : Vector
+  +getBestPosition() : Vector
+  +getBestEval() : double
+  +updatePosition() : void
+  +setVelocity(velocity : Vector) : void
+}
+
+class Swarm {
+  -numOfParticles : int
+  -epochs : int
+  -inertia : double
+  -cognitiveComponent : double
+  -socialComponent : double
+  +bestPosition : Vector
+  -bestEval : double
+  -particles : int[][]
+  +DEFAULT_INERTIA : double
+  +DEFAULT_COGNITIVE : double
+  +DEFAULT_SOCIAL : double
+  +cloudletList : List<cloudlet3>
+  +vmlist : List<vm3>
+  +Swarm(particles : int[][], epochs : int, numOfParticles ...)
+}
+
+Swarm *-- Particle : contains
+
+@enduml
